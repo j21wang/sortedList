@@ -11,9 +11,17 @@
  */
 struct SortedList
 {
+	Node *head;
+	CompareFuncT cf;
 };
 typedef struct SortedList* SortedListPtr;
 
+struct Node
+{
+	void *data;
+	Node *next;
+};
+typedef struct Node Node;
 
 /*
  * Iterator type for user to "walk" through the list item by item, from
@@ -21,6 +29,8 @@ typedef struct SortedList* SortedListPtr;
  */
 struct SortedListIterator
 {
+	SortedListPtr list;
+	Node *curr;
 };
 typedef struct SortedListIterator* SortedListIteratorPtr;
 

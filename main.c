@@ -29,6 +29,75 @@ int compareStrings(void *p1, void *p2)
 	return strcmp(s1, s2);
 }
 
+SortedListPtr SLCreate(CompareFuncT cf) {
+	SortedListPtr s1;
+	Node *head;
+
+	head->data = NULL;
+	head->next = NULL;
+
+	s1->head = head;
+	s1->cf = cf;
+
+	return s1;
+}
+
+SortedListIteratorPtr SLCreateIterator(SortedListPtr list) {
+	SortedListIteratorPtr slip;
+	slip->list = list;
+	slip->curr = list->head;
+}
+
+int SLInsert(SortedListPtr list, void *newObj) {
+	Node *newobject;
+
+	Node *curr = list->head;
+	CompareFuncT cf = list->cf;
+	SortedListIteratorPtr iterator = SLCreateIterator(list);
+
+	void *item = SLNextItem(iterator);
+
+	while (cf(newObj, item) == -1 && item != NULL) {
+		item = SLNextItem(iterator);
+	}
+	
+}
+
+int SLRemove(SortedListPtr list, void *newObj) {
+	//implement
+}
+
+void *SLNextItem(SortedListIteratorPtr iter) {
+	void *item;
+	Node *node = iter->curr;
+	item = node->data;
+	node = node->next;
+	return item;
+}
+
+void SLDestroy(SortedListPtr list) {
+	//implement
+}
+
+void SLDestroyIterator(SortedListIteratorPtr iter) {
+	//implement
+}
+
 int main()
 {
+
+	SortedListPtr list;
+	SortedListIteratorPtr iterator;
+	CompareFuncT cf;
+
+	cf = &compareInts;
+	
+	list = SLCreate(cf);
+	iterator = SLCreateIterator(list);
+
+
+
+	SLDestroy(list);
+	SLDestroyIterator(iterator);
+
 }
