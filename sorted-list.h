@@ -20,6 +20,7 @@ struct SortedList
 {
 	Node *head;
 	CompareFuncT cf;
+	int size;
 };
 typedef struct SortedList* SortedListPtr;
 

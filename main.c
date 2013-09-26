@@ -31,13 +31,14 @@ int compareStrings(void *p1, void *p2)
 
 SortedListPtr SLCreate(CompareFuncT cf) {
 	SortedListPtr s1 = (SortedListPtr) malloc(sizeof(struct SortedList));
-	Node *head = (Node *) malloc(sizeof(Node));
+	Node *head = (Node *) malloc(sizeof(struct Node));
 
 	head->data = NULL;
 	head->next = NULL;
 
 	s1->head = head;
 	s1->cf = cf;
+	(*s1).size = 0;
 
 	return s1;
 }
@@ -50,13 +51,20 @@ SortedListIteratorPtr SLCreateIterator(SortedListPtr list) {
 }
 
 int SLInsert(SortedListPtr list, void *newObj) {
-	Node *newObjectNode = (Node *) malloc(sizeof(Node));
+
+	if ((*list).size == 0) {
+		(list->head)->data = newObj;
+		(*list).size++;
+		return 1;
+	}
+
+	Node *newObjectNode = (Node *) malloc(sizeof(struct Node));
+    newObjectNode->data = newObj;
 
 	Node *curr = list->head;
-   Node *temp = curr;
+    Node *temp = curr;
 	CompareFuncT cf = list->cf;
 
-   newObjectNode->data = newObj;
 
    void *item = curr->data;
 
@@ -69,16 +77,25 @@ int SLInsert(SortedListPtr list, void *newObj) {
    if (curr == list->head) {
       newObjectNode->next = curr;
       list->head = newObjectNode;
-   } else {
+   } else if (curr != NULL) {
       temp->next = newObjectNode;
       newObjectNode->next = curr;
-   }
+   } else {
+	  temp->next = newObjectNode;
+	  newObjectNode->next = NULL;
+	}
    
+   (*list).size++;
    return 1;
 	
 }
 
 int SLRemove(SortedListPtr list, void *newObj) {
+
+	if ((*list).size == 0) {
+		return 0;
+	}
+
    Node *curr = list->head;
    Node *temp = curr;
    CompareFuncT cf = list->cf;
@@ -99,6 +116,7 @@ int SLRemove(SortedListPtr list, void *newObj) {
    free(curr->next);
    free(curr);
    
+   (*list).size--;
    return 1;
 
 }
@@ -147,13 +165,13 @@ int main()
 	//Begin Testing
 
 	int *a, *b, *c, *d, *e, *f, *g;
-	a = (int *) sizeof(int);
-	b = (int *) sizeof(int);
-	c = (int *) sizeof(int);
-	d = (int *) sizeof(int);
-	e = (int *) sizeof(int);
-	f = (int *) sizeof(int);
-	g = (int *) sizeof(int);
+	a = (int *) malloc(sizeof(int));
+	b = (int *) malloc(sizeof(int));
+	c = (int *) malloc(sizeof(int));
+	d = (int *) malloc(sizeof(int));
+	e = (int *) malloc(sizeof(int));
+	f = (int *) malloc(sizeof(int));
+	g = (int *) malloc(sizeof(int));
 
 	*a = 1;
 	*b = 2;
@@ -172,11 +190,11 @@ int main()
 	SLInsert(list, a);
 
 	int *n = malloc(sizeof(int));
-	n = SLNextItem(iter);
+	n = SLNextItem(iterator);
 
 	while (n != NULL) {
 		printf("%d", *n);
-		n = SLNextItem(iter);
+		n = SLNextItem(iterator);
 	}
 
 	//End Testing
