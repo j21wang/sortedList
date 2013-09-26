@@ -30,8 +30,8 @@ int compareStrings(void *p1, void *p2)
 }
 
 SortedListPtr SLCreate(CompareFuncT cf) {
-	SortedListPtr s1;
-	Node *head;
+	SortedListPtr s1 = (SortedListPtr) malloc(sizeof(SortedList));
+	Node *head = (Node *) malloc(sizeof(Node));
 
 	head->data = NULL;
 	head->next = NULL;
@@ -43,44 +43,91 @@ SortedListPtr SLCreate(CompareFuncT cf) {
 }
 
 SortedListIteratorPtr SLCreateIterator(SortedListPtr list) {
-	SortedListIteratorPtr slip;
+	SortedListIteratorPtr slip = (SortedListIteratorPtr) malloc(sizeof(SortedListIterator));
 	slip->list = list;
 	slip->curr = list->head;
 }
 
 int SLInsert(SortedListPtr list, void *newObj) {
-	Node *newobject;
+	Node *newObjectNode = (Node *) malloc(sizeof(Node));
 
 	Node *curr = list->head;
+   Node *temp = curr;
 	CompareFuncT cf = list->cf;
-	SortedListIteratorPtr iterator = SLCreateIterator(list);
 
-	void *item = SLNextItem(iterator);
+   newObjectNode->data = newObj;
 
-	while (cf(newObj, item) == -1 && item != NULL) {
-		item = SLNextItem(iterator);
+   void *item = curr->data;
+
+	while (cf(newObj, item) == -1 && curr != NULL) {
+      temp = curr;
+      curr = curr->next;
+      item = curr->data;
 	}
+
+   if (curr == list->head) {
+      newObjectNode->next = curr;
+      list->head = newObjectNode;
+   } else {
+      temp->next = newObjectNode;
+      newObjectNode->next = curr;
+   }
+   
+   return 1;
 	
 }
 
 int SLRemove(SortedListPtr list, void *newObj) {
-	//implement
+   Node *curr = list->head;
+   Node *temp = curr;
+   CompareFuncT cf = list->cf;
+
+   void *item = curr->data;
+
+   while(cf(newObj, item) != 0 && curr != NULL){
+      temp = curr;
+      curr = curr->next;
+      item = curr->data;
+      if (cf(item, newObj) == -1) {
+         return 0;
+      }
+   }
+
+   temp->next = curr->next;
+   free(curr->data);
+   free(curr->next);
+   free(curr);
+   
+   return 1;
+
 }
 
 void *SLNextItem(SortedListIteratorPtr iter) {
 	void *item;
 	Node *node = iter->curr;
 	item = node->data;
-	node = node->next;
+	iter->curr = node->next;
 	return item;
 }
 
 void SLDestroy(SortedListPtr list) {
-	//implement
+   Node *curr = list->head;
+   Node *temp = curr;
+   while (curr != NULL) {
+      curr = curr->next;
+      free(temp->data);
+      free(temp->next);
+      temp = curr;
+   }
+   free(list->head);
+   free(list->cf);
+   free(list);
 }
 
 void SLDestroyIterator(SortedListIteratorPtr iter) {
-	//implement
+   free(iter->list);
+   free(iter->curr);
+   free(iter);
 }
 
 int main()
