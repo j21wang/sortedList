@@ -118,6 +118,7 @@ void SLDestroy(SortedListPtr list) {
       curr = curr->next;
       free(temp->data);
       free(temp->next);
+	  free(temp);
       temp = curr;
    }
    free(list->head);
