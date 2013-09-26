@@ -30,7 +30,7 @@ int compareStrings(void *p1, void *p2)
 }
 
 SortedListPtr SLCreate(CompareFuncT cf) {
-	SortedListPtr s1 = (SortedListPtr) malloc(sizeof(SortedList));
+	SortedListPtr s1 = (SortedListPtr) malloc(sizeof(struct SortedList));
 	Node *head = (Node *) malloc(sizeof(Node));
 
 	head->data = NULL;
@@ -43,9 +43,10 @@ SortedListPtr SLCreate(CompareFuncT cf) {
 }
 
 SortedListIteratorPtr SLCreateIterator(SortedListPtr list) {
-	SortedListIteratorPtr slip = (SortedListIteratorPtr) malloc(sizeof(SortedListIterator));
+	SortedListIteratorPtr slip = (SortedListIteratorPtr) malloc(sizeof(struct SortedListIterator));
 	slip->list = list;
 	slip->curr = list->head;
+	return slip;
 }
 
 int SLInsert(SortedListPtr list, void *newObj) {
@@ -142,9 +143,46 @@ int main()
 	list = SLCreate(cf);
 	iterator = SLCreateIterator(list);
 
+	//Begin Testing
 
+	int *a, *b, *c, *d, *e, *f, *g;
+	a = (int *) sizeof(int);
+	b = (int *) sizeof(int);
+	c = (int *) sizeof(int);
+	d = (int *) sizeof(int);
+	e = (int *) sizeof(int);
+	f = (int *) sizeof(int);
+	g = (int *) sizeof(int);
+
+	*a = 1;
+	*b = 2;
+	*c = 3;
+	*d = 4;
+	*e = 5;
+	*f = 6;
+	*g = 7;
+
+	SLInsert(list, e);
+	SLInsert(list, f);
+	SLInsert(list, g);
+	SLInsert(list, c);
+	SLInsert(list, d);
+	SLInsert(list, b);
+	SLInsert(list, a);
+
+	int *n = malloc(sizeof(int));
+	n = SLNextItem(iter);
+
+	while (n != NULL) {
+		printf("%d", *n);
+		n = SLNextItem(iter);
+	}
+
+	//End Testing
 
 	SLDestroy(list);
 	SLDestroyIterator(iterator);
+
+	return 1;
 
 }
