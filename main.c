@@ -3,6 +3,7 @@
  */
 
 #include	<string.h>
+#include <stdio.h>
 #include	"sorted-list.h"
 
 int compareInts(void *p1, void *p2)
@@ -65,24 +66,26 @@ int SLInsert(SortedListPtr list, void *newObj) {
     Node *temp = curr;
 	CompareFuncT cf = list->cf;
 
-
-   void *item = curr->data;
-
-	while (cf(newObj, item) == -1 && curr != NULL) {
+   printf("%d\n",curr->next);
+   printf("%d\n",curr);
+	while (curr != NULL && cf(newObj, curr->data)==-1 ) {
       temp = curr;
       curr = curr->next;
-      item = curr->data;
+      printf("enters\n");
 	}
 
    if (curr == list->head) {
       newObjectNode->next = curr;
       list->head = newObjectNode;
+      printf("1");
    } else if (curr != NULL) {
       temp->next = newObjectNode;
       newObjectNode->next = curr;
+      printf("2");
    } else {
 	  temp->next = newObjectNode;
 	  newObjectNode->next = NULL;
+      printf("3");
 	}
    
    (*list).size++;
@@ -186,21 +189,24 @@ int main()
 	*f = 6;
 	*g = 7;
 
-	SLInsert(list, e);
 	SLInsert(list, f);
-	SLInsert(list, g);
+	SLInsert(list, e);
+	/*SLInsert(list, g);
 	SLInsert(list, c);
 	SLInsert(list, d);
 	SLInsert(list, b);
-	SLInsert(list, a);
+	SLInsert(list, a);*/
 
 	int *n = malloc(sizeof(int));
+   printf("%d\n",*n);
+	n = SLNextItem(iterator);
+   printf("%d\n",*n);
 	n = SLNextItem(iterator);
 
-	while (n != NULL) {
+	/*while (list->next != NULL) {
 		printf("%d\n", *n);
 		n = SLNextItem(iterator);
-	}
+	}*/
 
 	//End Testing
 
