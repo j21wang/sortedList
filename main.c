@@ -111,9 +111,16 @@ int SLRemove(SortedListPtr list, void *newObj) {
       }
    }
 
+   if (curr == list->head) {
+		temp = curr->next;
+		list->head = temp;
+		free(curr->data);
+		free(curr);
+		return 1;
+	}
+
    temp->next = curr->next;
    free(curr->data);
-   free(curr->next);
    free(curr);
    
    (*list).size--;
@@ -124,6 +131,9 @@ int SLRemove(SortedListPtr list, void *newObj) {
 void *SLNextItem(SortedListIteratorPtr iter) {
 	void *item;
 	Node *node = iter->curr;
+	if (node == NULL) {
+		return NULL;
+	}
 	item = node->data;
 	iter->curr = node->next;
 	return item;
@@ -135,18 +145,13 @@ void SLDestroy(SortedListPtr list) {
    while (curr != NULL) {
       curr = curr->next;
       free(temp->data);
-      free(temp->next);
 	  free(temp);
       temp = curr;
    }
-   free(list->head);
-   free(list->cf);
    free(list);
 }
 
 void SLDestroyIterator(SortedListIteratorPtr iter) {
-   free(iter->list);
-   free(iter->curr);
    free(iter);
 }
 
@@ -193,7 +198,7 @@ int main()
 	n = SLNextItem(iterator);
 
 	while (n != NULL) {
-		printf("%d", *n);
+		printf("%d\n", *n);
 		n = SLNextItem(iterator);
 	}
 
