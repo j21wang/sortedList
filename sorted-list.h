@@ -10,6 +10,7 @@ typedef struct Node
 {
 	void *data;
 	struct Node *next;
+   int ptrCount;
 } Node;
 
 typedef int (*CompareFuncT)(void *, void *);
