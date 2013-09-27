@@ -253,7 +253,7 @@ int main()
    SortedListPtr alist = NULL;
    SLDestroy(alist);
 
-   //Test 3a: Inserting
+   //Test 3a: Insert and Delete
    
    printf("Test 2: Inserting\n");
 
@@ -275,6 +275,13 @@ int main()
 	SLInsert(list, f);
 	SLInsert(list, a);
 
+   SLRemove(list, d);
+   SLRemove(list, c);
+   SLRemove(list, g);
+   d = (int *) malloc(sizeof(int));
+   *d = 4;
+   SLInsert(list, d);
+
 	iterator = SLCreateIterator(list);
 
 	n = SLNextItem(iterator);
@@ -284,10 +291,6 @@ int main()
 		printf("%d\n", *n);
 		n = SLNextItem(iterator);
 	}
-
-   //Test 3b:
-
-	//End Testing
 
 	SLDestroy(list);
 	SLDestroyIterator(iterator);
