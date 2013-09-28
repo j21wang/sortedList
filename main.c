@@ -55,6 +55,10 @@ SortedListIteratorPtr SLCreateIterator(SortedListPtr list) {
 
 int SLInsert(SortedListPtr list, void *newObj) {
 
+   if (newObj == NULL) {
+      return 0;
+   }
+
 	if ((*list).size == 0) {
 		(list->head)->data = newObj;
 		(*list).size++;
@@ -108,16 +112,33 @@ int SLRemove(SortedListPtr list, void *newObj) {
    Node *temp = curr;
    CompareFuncT cf = list->cf;
 
-   void *item = curr->data;
+  // void *item = curr->data;
 
-   while(curr != NULL && cf(newObj, item) != 0){
+   while(curr != NULL && cf(newObj, curr->data) != 0){
       temp = curr;
       curr = curr->next;
-      item = curr->data;
-      if (cf(item, newObj) < 0) {
-         return 0;
-      }
    }
+
+   if (curr == NULL) {
+      return 0;
+   }
+
+   if ((*list).size == 1) {
+      curr->data = NULL;
+      (*list).size--;
+      return 1;
+   } 
+
+   if (curr->next == NULL) {
+      temp->next = NULL;
+      (*curr).ptrCount--;
+      if ((*curr).ptrCount == 0) {
+         free(curr->data);
+         free(curr);
+      }
+      (*list).size--;
+      return 1;
+   } 
 
    if (curr == list->head) {
 		temp = curr->next;
@@ -127,6 +148,7 @@ int SLRemove(SortedListPtr list, void *newObj) {
 		   free(curr->data);
 		   free(curr);
       }
+      (*list).size--;
 		return 1;
 	}
 
@@ -147,18 +169,30 @@ void *SLNextItem(SortedListIteratorPtr iter) {
    if (iter == NULL) {
       return NULL;
    }
+   if ((*(iter->list)).size == 0) {
+      return NULL;
+   }
 	void *item;
    Node *temp;
 	Node *node = iter->curr;
-	if (node == NULL) {
+	if (node == NULL || node->data == NULL) {
 		return NULL;
 	}
-   while ((*node).ptrCount == 1) {
+   //printf("node->data is %f\n", *((double *) node->data));
+   printf("node ptrCount is %d\n", (*node).ptrCount);
+   while (node != NULL && (*node).ptrCount == 1) {
       temp = node;
+      //if (node->next == NULL) {
+         printf("node->next is %f\n",*((double *)node->next->data));
+      //}
       node = node->next;
+         printf("node is %f\n",*((double *)node->data));
       free(temp->data);
       free(temp);
       iter->curr = node;
+   }
+   if (node == NULL) {
+      return NULL;
    }
 	item = node->data;
 	iter->curr = node->next;
@@ -171,6 +205,10 @@ void *SLNextItem(SortedListIteratorPtr iter) {
 
 void SLDestroy(SortedListPtr list) {
    if (list == NULL) {
+      return;
+   }
+   if ((*list).size == 0) {
+      free(list);
       return;
    }
    Node *curr = list->head;
@@ -199,10 +237,10 @@ int main()
 
 	cf = &compareInts;
 	
-	list = SLCreate(cf);
 
 	//Begin Testing
 
+	list = SLCreate(cf);
 	int *a, *b, *c, *d, *e, *f, *g;
 	int *n;
 	a = (int *) malloc(sizeof(int));
@@ -253,9 +291,104 @@ int main()
    SortedListPtr alist = NULL;
    SLDestroy(alist);
 
-   //Test 3a: Insert and Delete
-   
-   printf("Test 2: Inserting\n");
+   //Test 3: One item in list
+
+   *a = 1;
+
+   //Test 3a: Remove value that exists
+   printf("Test 3a: Adding, iterating, and removing existing item from one item list\n");
+
+   SLCreate(cf);
+   SLInsert(list, a);
+   iterator = SLCreateIterator(list);
+
+	n = SLNextItem(iterator);
+   printf("The sorted list is:\n");
+
+	while (n != NULL) {
+		printf("%d\n", *n);
+		n = SLNextItem(iterator);
+	}
+
+   if(SLRemove(list, a)){
+      printf("PASS\n");
+   } else {
+      printf("FAIL\n");
+   }
+
+	SLDestroyIterator(iterator);
+
+   //Test 3b: Remove value that doesn't exist
+   printf("Test 3b: Adding and iterating. Removing non-existent item from one item list\n");
+   *b = 2;
+	a = (int *) malloc(sizeof(int));
+   *a = 1;
+
+   SLInsert(list, a);
+   iterator = SLCreateIterator(list);
+
+   n = SLNextItem(iterator);
+   printf("The sorted list is:\n");
+
+	while (n != NULL) {
+		printf("%d\n", *n);
+		n = SLNextItem(iterator);
+	}
+
+   if(!SLRemove(list, b)){
+      printf("PASS\n");
+   } else {
+      printf("FAIL\n");
+   }
+
+   //Test 3c: Adding value before that one item in list
+   printf("Test 3c: Adding value before the one item in list\n");
+   SLInsert(list, b);
+   iterator = SLCreateIterator(list);
+   n = SLNextItem(iterator);
+   printf("The current list is:\n");
+   while (n != NULL) {
+		printf("%d\n", *n);
+		n = SLNextItem(iterator);
+	}
+   SLRemove(list,b);
+	SLDestroyIterator(iterator);
+
+   //Test 3d: Adding value after that one item in list
+   printf("Test 3d: Adding value after the one item in list\n");
+	b = (int *) malloc(sizeof(int));
+   *b = 0;
+   SLInsert(list, b);
+   iterator = SLCreateIterator(list);
+   n = SLNextItem(iterator);
+   printf("The current list is:\n");
+   while (n != NULL) {
+		printf("%d\n", *n);
+		n = SLNextItem(iterator);
+	}
+   SLRemove(list,b);
+	SLDestroyIterator(iterator);
+
+   //Test 3e: Adding value same as that one item in list
+   printf("Test 3e: Adding value same as the one item in list\n");
+	b = (int *) malloc(sizeof(int));
+   *b = 1;
+   SLInsert(list, b);
+   iterator = SLCreateIterator(list);
+   n = SLNextItem(iterator);
+   printf("The current list is:\n");
+   while (n != NULL) {
+		printf("%d\n", *n);
+		n = SLNextItem(iterator);
+	}
+   SLRemove(list,a);
+   SLRemove(list,b);
+	SLDestroyIterator(iterator);
+
+   //Test 4: Insert and delete multiple items in a list and delete list
+   printf("Test 4: Inserting and deleting multiple items in a list and delete list\n");
+   a = (int *) malloc(sizeof(int));
+   b = (int *) malloc(sizeof(int));
 
 	*a = 1;
 	*b = 2;
