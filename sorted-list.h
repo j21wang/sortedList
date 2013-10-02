@@ -11,6 +11,7 @@ typedef struct Node
 	void *data;
 	struct Node *next;
    int ptrCount;
+   int deleted;
 } Node;
 
 typedef int (*CompareFuncT)(void *, void *);
