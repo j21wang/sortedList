@@ -153,6 +153,7 @@ int SLRemove(SortedListPtr list, void *newObj) {
 		   free(curr);
       } else {
          (*curr).deleted = 1;
+         (*temp).ptrCount++;
       }
       (*list).size--;
 		return 1;
@@ -221,7 +222,10 @@ void SLDestroy(SortedListPtr list) {
       curr = curr->next;
       (*temp).ptrCount--;
       if ((*temp).ptrCount == 0) {
-	      free(temp);
+	      //free(temp);
+         temp = NULL;
+      } else {
+         (*temp).deleted = 1;
       }
       temp = curr;
    }
@@ -246,6 +250,7 @@ void SLDestroyIterator(SortedListIteratorPtr iter) {
          (*node).ptrCount--;
 
          if ((*node).ptrCount == 0) {
+            //printf("freeing node!\n");
             iter->curr = node->next;
             free(node);
             node = iter->curr;
@@ -328,6 +333,7 @@ int main()
    SortedListPtr alist = NULL;
    SLDestroy(alist);
 
+   //INTEGERS
    //Test 3: One item in list
    *a = 1;
 
@@ -424,8 +430,8 @@ int main()
    SLRemove(list,b);
 	SLDestroyIterator(iterator);
 
-   //Test 4: Insert and delete multiple items in a list and delete list
-   printf("Test 4: Inserting and deleting multiple items in a list and delete list\n");
+   //Test 3f: Insert and delete multiple items in a list and delete list
+   printf("Test 3f: Inserting and deleting multiple items in a list and delete list\n");
    a = (int *) malloc(sizeof(int));
    b = (int *) malloc(sizeof(int));
 
@@ -474,6 +480,135 @@ int main()
    free(f);
    free(g);
 
-	return 1;
 
+   //CHARS
+   //Test 4a: Inserting two items in list
+	cf = &compareStrings;
+	list = SLCreate(cf);
+   printf("Test 4a: Inserting and deleting multiple items in a list and delete list\n");
+   char *w1, *w2, *w3, *w4, *w5;
+	char *ch;
+
+   w1 = (char *)malloc(sizeof(char)*4);
+   w1[0] = 'r';
+   w1[1] = 'a';
+   w1[2] = 't';
+   w1[3] = '\0';
+   w2 = (char *)malloc(sizeof(char)*5);
+   w2[0] = 'm';
+   w2[1] = 'u';
+   w2[2] = 'c';
+   w2[3] = 'h';
+   w2[4] = '\0';
+
+   SLInsert(list,w1);
+   SLInsert(list,w2);
+   
+   iterator = SLCreateIterator(list);
+   ch = SLNextItem(iterator);
+   printf("The sorted list is:\n");
+
+	while (ch != NULL) {
+		printf("%s\n", ch);
+		ch = SLNextItem(iterator);
+	}   
+
+   SLDestroyIterator(iterator);
+
+   //Test 4b: Delete first word
+   printf("Test 4b: Deleting head word \n");
+   iterator = SLCreateIterator(list);
+
+   SLRemove(list,w1);
+
+   ch = SLNextItem(iterator);
+   printf("The sorted list is:\n");
+
+	while (ch != NULL) {
+		printf("%s\n", ch);
+		ch = SLNextItem(iterator);
+	}
+
+   SLDestroyIterator(iterator);
+
+   //Test 4c: Delete last and only word
+   printf("Test 4c: Deleting last word \n");
+   iterator = SLCreateIterator(list);
+
+   SLRemove(list,w2);
+
+   ch = SLNextItem(iterator);
+   printf("The sorted list is:\n");
+
+	while (ch != NULL) {
+		printf("%s\n", ch);
+		ch = SLNextItem(iterator);
+	}
+
+   SLDestroyIterator(iterator);
+   SLDestroy(list);
+
+   //Test 4d: Add more than two words (iterator created after words inserted)
+   printf("Test 4d: Add more than two words \n");
+   cf = &compareStrings;
+	list = SLCreate(cf);
+
+
+   w3 = (char *)malloc(sizeof(char)*6);
+   w3[0] = 'h';
+   w3[1] = 'e';
+   w3[2] = 'l';
+   w3[3] = 'l';
+   w3[4] = 'o';
+   w3[5] = '\0';
+   w4 = (char *)malloc(sizeof(char)*6);
+   w4[0] = 'w';
+   w4[1] = 'o';
+   w4[2] = 'r';
+   w4[3] = 'l';
+   w4[4] = 'd';
+   w4[5] = '\0';
+
+   SLInsert(list,w1);
+   SLInsert(list,w2);
+   SLInsert(list,w3);
+   SLInsert(list,w4);
+
+   iterator = SLCreateIterator(list);
+   ch = SLNextItem(iterator);
+   printf("The sorted list is:\n");
+
+	while (ch != NULL) {
+		printf("%s\n", ch);
+		ch = SLNextItem(iterator);
+	}
+
+   SLDestroyIterator(iterator);
+
+
+   //Test 4d: Add more than two words (iterator created before words inserted)
+   //
+   //
+   //Test 5: Destroy iterator after SLDestroy left things to clean up
+   printf("Test 5: Destroy iterator after SLDestroy left things to clean up\n");
+   SLDestroy(list);
+   list = SLCreate(cf);
+
+   SLInsert(list,w1);
+   SLInsert(list,w2);
+   SLInsert(list,w3);
+   SLInsert(list,w4);
+
+   iterator = SLCreateIterator(list);
+   ch = SLNextItem(iterator);
+   ch = SLNextItem(iterator);
+   printf("iterator is after:%s\n", ch);
+
+	SortedListIteratorPtr iterator2;
+   iterator2 = SLCreateIterator(list);
+
+   SLDestroy(list);
+   SLDestroyIterator(iterator);
+   
+	return 1;
 }
