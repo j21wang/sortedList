@@ -247,7 +247,7 @@ int main()
 	cf = &compareStrings;
 	list = SLCreate(cf);
    printf("Test 4a: Inserting and deleting multiple items in a list and delete list\n");
-   char *w1, *w2, *w3, *w4, *w5;
+   char *w1, *w2, *w3, *w4;
 	char *ch;
 
    w1 = (char *)malloc(sizeof(char)*4);
@@ -310,10 +310,11 @@ int main()
    SLDestroy(list);
 
    //Test 4d: Add more than two words (iterator created after words inserted)
-   printf("Test 4d: Add more than two words \n");
+   printf("Test 4d: Add more than two words and create iterator before inserting words\n");
    cf = &compareStrings;
 	list = SLCreate(cf);
 
+   iterator = SLCreateIterator(list);
 
    w3 = (char *)malloc(sizeof(char)*6);
    w3[0] = 'h';
@@ -335,6 +336,18 @@ int main()
    SLInsert(list,w3);
    SLInsert(list,w4);
 
+   ch = SLNextItem(iterator);
+   printf("The sorted list is:\n");
+
+	while (ch != NULL) {
+		printf("%s\n", ch);
+		ch = SLNextItem(iterator);
+	}
+
+   SLDestroyIterator(iterator);
+
+   //Test 4d: Add more than two words (iterator created before words inserted)
+   printf("Test 4e: Add more than two words and create iterator after inserting words\n");
    iterator = SLCreateIterator(list);
    ch = SLNextItem(iterator);
    printf("The sorted list is:\n");
@@ -346,13 +359,69 @@ int main()
 
    SLDestroyIterator(iterator);
 
+   //Test 4e: Delete item that iterator is currently on
+   printf("Test 4e: Delete item that iterator is currently on\n");
+   iterator = SLCreateIterator(list);
+   ch = SLNextItem(iterator);
+   ch = SLNextItem(iterator); //should be on "rat"
+   SLRemove(list,w1); //delete rat
 
-   //Test 4d: Add more than two words (iterator created before words inserted)
-   //
-   //
+   SortedListIteratorPtr iterator2;
+   iterator2 = SLCreateIterator(list);
+   ch = SLNextItem(iterator2);
+   printf("The sorted list is:\n");
+
+	while (ch != NULL) {
+		printf("%s\n", ch);
+		ch = SLNextItem(iterator2);
+	}
+
+   SLDestroyIterator(iterator);
+   SLDestroyIterator(iterator2);
+
+   //Test 4f: Delete item before the item that iterator is currently on
+   printf("Test 4f: Delete item before the item iterator is currently on\n");
+   iterator = SLCreateIterator(list);
+   SLInsert(list,w1);
+   ch = SLNextItem(iterator);
+   ch = SLNextItem(iterator); //should be on "rat"
+   SLRemove(list,w4); //delete world
+
+   iterator2 = SLCreateIterator(list);
+   ch = SLNextItem(iterator2);
+   printf("The sorted list is:\n");
+
+	while (ch != NULL) {
+		printf("%s\n", ch);
+		ch = SLNextItem(iterator2);
+	}
+
+   SLDestroyIterator(iterator);
+   SLDestroyIterator(iterator2);
+
+   //Test 4g: Delete item after the item that iterator is currently on
+   printf("Test 4f: Delete item after the item iterator is currently on\n");
+   iterator = SLCreateIterator(list);
+   SLInsert(list,w4);
+   ch = SLNextItem(iterator);
+   ch = SLNextItem(iterator); //should be on "rat"
+   SLRemove(list,w2); //delete much
+
+   iterator2 = SLCreateIterator(list);
+   ch = SLNextItem(iterator2);
+   printf("The sorted list is:\n");
+
+	while (ch != NULL) {
+		printf("%s\n", ch);
+		ch = SLNextItem(iterator2);
+	}
+
+   SLDestroyIterator(iterator);
+   SLDestroyIterator(iterator2);
+   SLDestroy(list);
+
    //Test 5: Destroy iterator after SLDestroy left things to clean up
    printf("Test 5: Destroy iterator after SLDestroy left things to clean up\n");
-   SLDestroy(list);
    list = SLCreate(cf);
 
    SLInsert(list,w1);
@@ -365,11 +434,55 @@ int main()
    ch = SLNextItem(iterator);
    printf("iterator is after:%s\n", ch);
 
-	SortedListIteratorPtr iterator2;
    iterator2 = SLCreateIterator(list);
 
    SLDestroy(list);
    SLDestroyIterator(iterator);
    
+   //Test 6: Doubles testing   
+   printf("Test 6: Doubles testing (adding, iterating, removing)\n");
+   cf = &compareDoubles;
+   list = SLCreate(cf);
+	double *j, *k, *l, *m;
+	double *db;
+	j = (double *) malloc(sizeof(double));
+	k = (double *) malloc(sizeof(double));
+	l = (double *) malloc(sizeof(double));
+	m = (double *) malloc(sizeof(double));
+
+	*j = 1.69;
+	*k = 10.8;
+	*l = 33.33333;
+	*m = 0.1;
+
+   SLInsert(list,j);
+   SLInsert(list,k);
+   SLInsert(list,l);
+   SLInsert(list,m);
+	
+   iterator = SLCreateIterator(list);
+   db = SLNextItem(iterator);
+   printf("The sorted list is:\n");
+
+	while (db != NULL) {
+		printf("%f\n", *db);
+		db = SLNextItem(iterator);
+	} //iterator pointing to null
+
+   SLRemove(list,k); //remove 10.8
+   iterator2 = SLCreateIterator(list);
+   db = SLNextItem(iterator2);
+   printf("The sorted list after deletion is:\n");
+
+	while (db != NULL) {
+		printf("%f\n", *db);
+		db = SLNextItem(iterator2);
+	}
+
+   SLDestroy(list);
+   SLDestroyIterator(iterator);
+   SLDestroyIterator(iterator2);
+
+
 	return 1;
 }
