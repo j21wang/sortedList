@@ -12,5 +12,8 @@ libsl.a: sorted-list.o sorted-list.h
 	      $(CC) $(CFLAGS) sorted-list.c
 	   	ar rcs libsl.a sorted-list.o
 
+sorted-list.o: sorted-list.c sorted-list.h
+			$(CC) $(CFLAGS) sorted-list.c
+
 clean: rm-rf *.o sl
 		 rm-rf *.o libsl.a
