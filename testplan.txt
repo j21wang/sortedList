@@ -1,0 +1,166 @@
+TEST CASES FOR PA2
+Joyce Wang and Kevin Sung
+------------------------------------------------
+
+TEST 1: EMPTY LIST
+Test 1a: Iterate on empty list
+Expected: nothing happens
+Result: PASS -- nothing happens
+
+Test 1b: Removing from an empty list
+Expected: nothing is removed
+Result: PASS -- nothing is removed
+
+
+TEST 2: NULL ITERATOR/LIST
+Test 2a: Call SLNextItem with NULL iterator
+Expected: nothing happens
+Result: PASS -- nothing happens
+
+Test 2b: Destroy NULL iterator
+Expected: NULL iterator is destroyed
+Result: PASS -- NULL iterator is destroyed
+
+Test 2c: Destroy NULL list
+Expected: NULL list is destroyed
+Result: PASS -- NULL list is destroyed
+
+
+TEST 3: INTEGER TESTS
+Test 3a: Inserting, iterating, and removing existing item from one item list
+Expected: 
+Before list is: 1
+Iterator starts at the item and goes until it hits NULL, 1 deletes
+After list is: empty
+Result: PASS -- 1 inserts into the list, and 1 is removed from the list.
+
+Test 3b: Inserting, iterating, and removing non-existent item from one item list
+Expected:
+Before list is: 1
+Iterator starts at the item and goes until it hits NULL, try to remove 2,
+which is non-existent
+After list is: 1
+Result: PASS -- list is still 1; 2 cannot be removed if it doesn't exist
+
+Test 3c: Adding a value before one item in a one item list
+Expected:
+Before list is: 1
+Try to add: 2
+After list is: 2, 1
+Result: PASS -- list is 2, 1
+
+Test 3d: Adding a value after one item in a one item list
+Expected:
+Before list is: 1
+Try to add: 0
+After list is: 1, 0
+Result: PASS -- list is 1, 0
+
+Test 3e: Adding/Removing a value that is the same as the one item in a one item list
+Expected:
+Before list is: 3
+Try to add: 3
+After list is: 3, 3
+Then, remove both, so list is empty
+Result: PASS -- list is 3, 3; after removal of both, list is empty
+
+Test 3f: Insert and delete multiple items in a list and delete list
+Expected:
+Insert: 2, 5, 7, 3, 4, 7, 1
+After insertion, list is: 7, 6, 5, 4, 3, 2, 1
+Remove 4, 3, 7
+List becomes: 6, 5, 2, 1
+Insert 4
+List becomes: 6, 5, 4, 2, 1
+Result: PASS -- list is 6, 5, 4, 2, 1
+
+
+TEST 4: STRINGS
+Test 4a: Inserting two strings in a list
+Expected:
+Insert: rat, much
+After insertion, list is: rat, much
+Result: PASS -- list is rat, much
+
+Test 4b: Delete first word
+Expected:
+List is: rat, much
+Delete rat from list
+List becomes: much
+Result: PASS -- list is much
+
+Test 4c: Delete last and only word
+Expected:
+List is: much
+Delete much from list
+List becomes: empty
+Result: PASS -- list is empty
+
+Test 4d: Add more than two words and create iterator after inserting words
+Expected:
+Insert: rat, much, hello, world
+Being iteration, and output list is: world, rat, much, hello
+Actual list is also world, rat, much, hello
+Result: PASS -- since iterator is created after words are inserted,
+everything in the list is outputted
+
+Test 4e: Add more than two words and create iterator before inserting words
+Expected:
+Create iterator
+Insert: rat, much, hello, world
+Begin iteration, and output list is: rat, much, hello
+However, the actual list contains: world, rat, much, hello 
+Result: PASS -- since iterator is create before words are inserted, the head
+is the first word that is inserted, which is "rat", so "world" doesn't print
+even though it is really in the list
+
+Test 4f: Delete item before the item that iterator is currently on
+Expected:
+List: world, rat, much, hello
+Iterate to the word "rat"
+Remove "rat"
+After list is: world, much, hello
+Result: PASS -- list is world, much, hello
+
+Test 4g: Delete item before the item that iterator is currently on
+Expected:
+List: world, rat, much, hello
+Iterate to the word "rat"
+Remove "world"
+After list is: rat, much, hello
+Result: PASS -- list is rat, much, hello
+
+Test 4h: Delete item after the item iterator is currently on
+Expected:
+List: world, rat, much, hello
+Iterate to the word "rat"
+Remove "much"
+After list is: world, rat, much, hello 
+Result: PASS -- list is world, rat, hello
+
+Test 4i: Duplicate strings
+Expected:
+List: house, house, house, house
+Delete three "house"'s
+After list: house
+Result: PASS -- list is house
+
+
+TEST 5: DESTROYING ITERATOR
+Test 5: Destroy iterator after SLDestroy left dangling nodes to clean up
+Expected:
+List: world, rat, much, hello
+Iterate to the word "rat"
+Destroy list
+Result: PASS -- list is destroyed
+
+
+TEST 6: DOUBLES
+Test 6: Doubles testing
+Expected:
+Insert 1.69, 10.8, 33.33333, 0.1
+List becomes: 33.33333, 10.8, 1.69, 0.1
+Iterate to the end, then remove 10.8
+After list is: 33.3333, 1.69, 0.1
+
+
