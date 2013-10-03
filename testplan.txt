@@ -96,15 +96,7 @@ Delete much from list
 List becomes: empty
 Result: PASS -- list is empty
 
-Test 4d: Add more than two words and create iterator after inserting words
-Expected:
-Insert: rat, much, hello, world
-Being iteration, and output list is: world, rat, much, hello
-Actual list is also world, rat, much, hello
-Result: PASS -- since iterator is created after words are inserted,
-everything in the list is outputted
-
-Test 4e: Add more than two words and create iterator before inserting words
+Test 4d: Add more than two words and create iterator before inserting words
 Expected:
 Create iterator
 Insert: rat, much, hello, world
@@ -113,6 +105,14 @@ However, the actual list contains: world, rat, much, hello
 Result: PASS -- since iterator is create before words are inserted, the head
 is the first word that is inserted, which is "rat", so "world" doesn't print
 even though it is really in the list
+
+Test 4e: Add more than two words and create iterator after inserting words
+Expected:
+Insert: rat, much, hello, world
+Being iteration, and output list is: world, rat, much, hello
+Actual list is also world, rat, much, hello
+Result: PASS -- since iterator is created after words are inserted,
+everything in the list is outputted
 
 Test 4f: Delete item before the item that iterator is currently on
 Expected:

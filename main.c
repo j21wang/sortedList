@@ -310,7 +310,7 @@ int main()
    SLDestroyIterator(iterator);
    SLDestroy(list);
 
-   //Test 4d: Add more than two words (iterator created after words inserted)
+   //Test 4d: Add more than two words (iterator created before words inserted)
    printf("Test 4d: Add more than two words and create iterator before inserting words\n");
    cf = &compareStrings;
 	list = SLCreate(cf);
@@ -347,7 +347,7 @@ int main()
 
    SLDestroyIterator(iterator);
 
-   //Test 4e: Add more than two words (iterator created before words inserted)
+   //Test 4e: Add more than two words (iterator created after words inserted)
    printf("Test 4e: Add more than two words and create iterator after inserting words\n");
    iterator = SLCreateIterator(list);
    ch = SLNextItem(iterator);
