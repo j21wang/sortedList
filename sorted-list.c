@@ -222,11 +222,11 @@ void SLDestroy(SortedListPtr list) {
    while (curr != NULL) {
       curr = curr->next;
       (*temp).ptrCount--;
-      if ((*temp).ptrCount == 0) {
-	      //free(temp);
-         temp = NULL;
-      } else {
+      if ((*temp).ptrCount == 0) {  //no iterator pointing to it
+	     free(temp);
+      } else {                      //at least one iterator pointing to it
          (*temp).deleted = 1;
+         temp->next = NULL;
       }
       temp = curr;
    }
@@ -235,6 +235,7 @@ void SLDestroy(SortedListPtr list) {
 
 void SLDestroyIterator(SortedListIteratorPtr iter) {
    if (iter == NULL) {
+      free(iter);
       return;
    }
 

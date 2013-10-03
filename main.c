@@ -144,6 +144,8 @@ int main()
       printf("FAIL\n");
    }
 
+   SLDestroyIterator(iterator);
+
    //Test 3c: Adding value before that one item in list
    printf("Test 3c: Adding value before the one item in list\n");
    SLInsert(list, b);
@@ -193,8 +195,6 @@ int main()
 
    //Test 3f: Insert and delete multiple items in a list and delete list
    printf("Test 3f: Inserting and deleting multiple items in a list and delete list\n");
-   a = (int *) malloc(sizeof(int));
-   b = (int *) malloc(sizeof(int));
 
 	*a = 1;
 	*b = 2;
@@ -240,6 +240,7 @@ int main()
    free(e);
    free(f);
    free(g);
+   free(z);
 
 
    //STRINGS
@@ -484,6 +485,7 @@ int main()
 
    SLDestroyIterator(iterator);
    SLDestroyIterator(iterator2);
+   SLDestroy(list);
 
 
    //Test 5: Destroy iterator after SLDestroy left things to clean up
@@ -549,6 +551,18 @@ int main()
    SLDestroyIterator(iterator);
    SLDestroyIterator(iterator2);
 
+   free(w1);
+   free(w2);
+   free(w3);
+   free(w4);
+   free(dup1);
+   free(dup2);
+   free(dup3);
+   free(dup4);
+   free(j);
+   free(k);
+   free(l);
+   free(m);
 
 	return 1;
 }
