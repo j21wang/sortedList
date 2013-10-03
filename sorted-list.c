@@ -65,7 +65,6 @@ int SLInsert(SortedListPtr list, void *newObj) {
 		(list->head)->data = newObj;
       (*(list->head)).deleted = 0;
 		(*list).size++;
-      //printf("Z data is %d, size is %d\n", *((int *) newObj), (*list).size);
 		return 1;
 	}
 
@@ -81,24 +80,20 @@ int SLInsert(SortedListPtr list, void *newObj) {
 	while (curr != NULL && cf(newObj, curr->data) < 0 ) {
       temp = curr;
       curr = curr->next;
-      //printf("enters\n");
 	}
 
    if (curr == list->head) {
       newObjectNode->next = curr;
       list->head = newObjectNode;
       (*newObjectNode).ptrCount++;
-      //printf("A data is %d, size before insertion is %d\n", *((int *) newObj), (*list).size);
    } else if (curr != NULL) {
       temp->next = newObjectNode;
       newObjectNode->next = curr;
       (*newObjectNode).ptrCount++;
-      //printf("B data is %d, size before insertion is %d\n", *((int *) newObj), (*list).size);
    } else {
 	  temp->next = newObjectNode;
 	  newObjectNode->next = NULL;
      (*newObjectNode).ptrCount++;
-     //printf("C data is %d, size before insertion is %d\n", *((int *) newObj), (*list).size);
 	}
    
    (*list).size++;
@@ -115,8 +110,6 @@ int SLRemove(SortedListPtr list, void *newObj) {
    Node *curr = list->head;
    Node *temp = curr;
    CompareFuncT cf = list->cf;
-
-  // void *item = curr->data;
 
    while(curr != NULL && cf(newObj, curr->data) != 0){
       temp = curr;
@@ -187,14 +180,9 @@ void *SLNextItem(SortedListIteratorPtr iter) {
 	if (node == NULL || node->data == NULL) {
 		return NULL;
 	}
-   //printf("node->data is %f\n", *((double *) node->data));
    while (node != NULL && (*node).deleted == 1) {
       temp = node;
-      //if (node->next == NULL) {
-      //   printf("node->next is %f\n",*((double *)node->next->data));
-      //}
       node = node->next;
-      //   printf("node is %f\n",*((double *)node->data));
       (*temp).ptrCount--;
       if ((*temp).ptrCount == 0) {
          free(temp);
@@ -252,7 +240,6 @@ void SLDestroyIterator(SortedListIteratorPtr iter) {
          (*node).ptrCount--;
 
          if ((*node).ptrCount == 0) {
-            //printf("freeing node!\n");
             iter->curr = node->next;
             free(node);
             node = iter->curr;
